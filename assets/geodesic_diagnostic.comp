@@ -1,0 +1,49 @@
+#version 430
+layout(local_size_x = 16, local_size_y = 16) in;
+
+layout(binding = 0, rgba8) writeonly uniform image2D outImage;
+layout(std140, binding = 1) uniform Camera {
+    vec3 camPos;     float _pad0;
+    vec3 camRight;   float _pad1;
+    vec3 camUp;      float _pad2;
+    vec3 camForward; float _pad3;
+    float tanHalfFov;
+    float aspect;
+    bool moving;
+    int   _pad4;
+} cam;
+
+void main() {
+    ivec2 pix = ivec2(gl_GlobalInvocationID.xy);
+    if (pix.x >= 400 || pix.y >= 300) return;
+
+    // Create a simple pattern that we KNOW will show up
+    vec4 color = vec4(0.0);
+    
+    // Test 1: Simple gradient based on pixel position
+    float x = float(pix.x) / 400.0;
+    float y = float(pix.y) / 300.0;
+    color = vec4(x, y, 0.5, 1.0);
+    
+    // Test 2: Add a circle in the center
+    vec2 center = vec2(0.5, 0.5);
+    float dist = distance(vec2(x, y), center);
+    if (dist < 0.2) {
+        color = vec4(1.0, 0.0, 0.0, 1.0);  // Red circle
+    }
+    
+    // Test 3: Show camera position as color (should not be all zeros)
+    vec3 pos = cam.camPos;
+    if (length(pos) > 1e9) {  // If camera position is reasonable
+        color.rgb += abs(pos) / 1e11;  // Add camera position as color
+    }
+    
+    // Test 4: Add some noise to make sure we see variation
+    float noise = fract(sin(dot(vec2(pix), vec2(12.9898, 78.233))) * 43758.5453);
+    color.rgb += vec3(noise * 0.1);
+    
+    // Ensure we never get pure black
+    color = max(color, vec4(0.1, 0.1, 0.1, 1.0));
+    
+    imageStore(outImage, pix, color);
+}

@@ -1,0 +1,20 @@
+# Core dependencies for black hole simulation
+numpy>=1.24.0
+PyOpenGL>=3.1.6
+glfw>=2.5.0
+moderngl>=5.8.0
+moderngl-window>=2.4.0
+numba>=0.57.0
+pillow>=9.5.0
+scipy>=1.10.0
+
+# Development dependencies
+pytest>=7.2.0
+pytest-cov>=4.0.0
+black>=23.0.0
+flake8>=6.0.0
+mypy>=1.0.0
+
+# Optional dependencies for enhanced features
+# imgui>=1.4.0  # For UI controls (uncomment if needed)
+# h5py>=3.8.0   # For data export (uncomment if needed)

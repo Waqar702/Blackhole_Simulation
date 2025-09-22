@@ -1,0 +1,3 @@
+[console_scripts]
+blackhole-2d = blackhole_python.demos.demo_2d:main
+blackhole-3d = blackhole_python.demos.demo_3d:main
